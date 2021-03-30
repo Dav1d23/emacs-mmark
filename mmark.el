@@ -17,7 +17,7 @@
 
 (defun mmark--prehash-string (mstr)
   "Prehash MSTR in order to have a number at the end."
-  ;; FIXME this version will have a flawless: permutation of
+  ;; FIXME this version will have a flaw: permutation of
   ;; the same buffer name have the same pre-hash of another file.
   ;; Example: to_to_99 and 9_otto_9 will have the same counter, thus the same _hash_ :'(.
   (let ((counter 0))
