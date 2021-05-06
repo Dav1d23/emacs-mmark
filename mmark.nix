@@ -3,14 +3,32 @@
 pkgs.stdenv.mkDerivation {
   name = "mmark";
 
-  src = ./mmark.el;
+  src = [
+    ./mmark.el
+    ./mmark-test.el
+    ./run_test.sh
+  ];
 
-  phases = [ "buildPhase" "installPhase" ];
+  phases = [
+    "unpackPhase"
+    "testPhase"
+    "buildPhase"
+    "installPhase"
+  ];
 
   buildInputs = [ pkgs.emacs ];
 
+  unpackPhase = ''
+    for srcFile in $src; do
+      cp $srcFile $(stripHash $srcFile)
+    done
+  '';
+
+  testPhase = ''
+    bash run_test.sh
+  '';
+
   buildPhase = ''
-    cp $src mmark.el
     emacs --batch -f batch-byte-compile mmark.el
   '';
 
