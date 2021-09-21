@@ -94,19 +94,6 @@
   "Check the mark is correctly set in the hashmap."
   (should
    (=
-    (progn
-      (set-mmark-pos 4 ?a)
-      (mmark--mark-cls-point (get-mmark-hash-entry ?a))
-      )
-    4
-    )
-   )
-  )
-
-(ert-deftest test-set-mark ()
-  "Check the mark is correctly set in the hashmap."
-  (should
-   (=
     (clean-mmask-hashmap
      (lambda ()
        (progn
