@@ -91,7 +91,7 @@
 
 
 (define-derived-mode mmark-mode tabulated-list-mode "mmark"
-  "mmark-mode definition."
+  "The definition for mmark-mode."
   (let (
         (entries (mmark--create-entries))
         )
@@ -140,7 +140,7 @@
   (interactive)
   (switch-to-buffer "*mmark*")
 
-  ;; Remove the underlying entry.
+  ;; Reload the mode, to update the entries.
   (define-key mmark-mode-map (kbd "g") 'mmark-mode)
   ;; Remove the underlying entry.
   (define-key mmark-mode-map (kbd "d") 'mmark--remove-entry)
