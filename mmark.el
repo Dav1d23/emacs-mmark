@@ -129,10 +129,29 @@
   (let* (
          (key (cl-parse-integer (tabulated-list-get-id)))
          )
-    (setq mmark--hashmap (map-delete mmark--hashmap key))
+    (map-delete mmark--hashmap key)
     (message "Removed %s" key)
     (mmark-mode)
     ))
+
+
+(defun mmark--kill-buffer-hook ()
+  "Remove all keys associated to a buffer being killed."
+  (let (
+        (buf (buffer-name))
+        (remove-keys)
+        )
+    (map-do
+     (lambda (key value)
+       (when (string= buf (mmark--mark-cls-buffer value))
+         (push key remove-keys)))
+     mmark--hashmap)
+    (mapcar (lambda (k) (map-delete mmark--hashmap k)) remove-keys)
+    )
+  )
+
+
+(add-hook 'kill-buffer-hook #'mmark--kill-buffer-hook)
 
 
 (defun mmark ()
@@ -149,7 +168,6 @@
 
   (mmark-mode)
   )
-
 
 (provide 'mmark)
 
