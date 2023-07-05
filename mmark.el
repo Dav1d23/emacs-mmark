@@ -91,7 +91,7 @@
 
 
 (define-derived-mode mmark-mode tabulated-list-mode "mmark"
-  "mmark-mode definition."
+  "The definition for mmark-mode."
   (let (
         (entries (mmark--create-entries))
         )
@@ -129,10 +129,29 @@
   (let* (
          (key (cl-parse-integer (tabulated-list-get-id)))
          )
-    (setq mmark--hashmap (map-delete mmark--hashmap key))
+    (map-delete mmark--hashmap key)
     (message "Removed %s" key)
     (mmark-mode)
     ))
+
+
+(defun mmark--kill-buffer-hook ()
+  "Remove all keys associated to a buffer being killed."
+  (let (
+        (buf (buffer-name))
+        (remove-keys)
+        )
+    (map-do
+     (lambda (key value)
+       (when (string= buf (mmark--mark-cls-buffer value))
+         (push key remove-keys)))
+     mmark--hashmap)
+    (mapcar (lambda (k) (map-delete mmark--hashmap k)) remove-keys)
+    )
+  )
+
+
+(add-hook 'kill-buffer-hook #'mmark--kill-buffer-hook)
 
 
 (defun mmark ()
@@ -140,7 +159,7 @@
   (interactive)
   (switch-to-buffer "*mmark*")
 
-  ;; Remove the underlying entry.
+  ;; Reload the mode, to update the entries.
   (define-key mmark-mode-map (kbd "g") 'mmark-mode)
   ;; Remove the underlying entry.
   (define-key mmark-mode-map (kbd "d") 'mmark--remove-entry)
@@ -149,7 +168,6 @@
 
   (mmark-mode)
   )
-
 
 (provide 'mmark)
 
